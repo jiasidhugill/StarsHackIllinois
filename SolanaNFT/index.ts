@@ -1,14 +1,16 @@
 import { Connection, Keypair } from  "@solana/web3.js";
 import { createMint, getOrCreateAssociatedTokenAccount, mintTo, setAuthority, transfer } from  "@solana/spl-token";
+import { getKeypairFromFile } from "@solana-developers/helpers"
 
 const quicknodeEndpoint = 'https://broken-fittest-waterfall.solana-devnet.quiknode.pro/53eb10c92c0f01f68849b41744770c92ddd31a67/';
 const connection = new Connection(quicknodeEndpoint, "confirmed");
 
-const secret = [174,157,65,57,39,160,80,236,198,199,31,185,130,28,84,184,140,245,128,238,61,70,34,216,208,3,236,183,126,187,159,152,236,239,214,93,0,245,157,57,196,125,154,195,22,21,161,167,177,95,117,213,203,40,81,192,59,211,221,160,201,4,149,242];
-const fromWallet = Keypair.fromSecretKey(new Uint8Array(secret));
-
+//const secret = [174,157,65,57,39,160,80,236,198,199,31,185,130,28,84,184,140,245,128,238,61,70,34,216,208,3,236,183,126,187,159,152,236,239,214,93,0,245,157,57,196,125,154,195,22,21,161,167,177,95,117,213,203,40,81,192,59,211,221,160,201,4,149,242];
+//const fromWallet = Keypair.fromSecretKey(new Uint8Array(secret));
 
 (async () => {
+  const fromWallet = await getKeypairFromFile("key.json");
+  console.log("FROM WALLET", fromWallet.publicKey.toBase58());
   // Create a new token 
   const mint = await createMint(
     connection, 

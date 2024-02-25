@@ -38,27 +38,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var web3_js_1 = require("@solana/web3.js");
 var spl_token_1 = require("@solana/spl-token");
+var helpers_1 = require("@solana-developers/helpers");
 var quicknodeEndpoint = 'https://broken-fittest-waterfall.solana-devnet.quiknode.pro/53eb10c92c0f01f68849b41744770c92ddd31a67/';
 var connection = new web3_js_1.Connection(quicknodeEndpoint, "confirmed");
-var secret = [174, 157, 65, 57, 39, 160, 80, 236, 198, 199, 31, 185, 130, 28, 84, 184, 140, 245, 128, 238, 61, 70, 34, 216, 208, 3, 236, 183, 126, 187, 159, 152, 236, 239, 214, 93, 0, 245, 157, 57, 196, 125, 154, 195, 22, 21, 161, 167, 177, 95, 117, 213, 203, 40, 81, 192, 59, 211, 221, 160, 201, 4, 149, 242];
-var fromWallet = web3_js_1.Keypair.fromSecretKey(new Uint8Array(secret));
+//const secret = [174,157,65,57,39,160,80,236,198,199,31,185,130,28,84,184,140,245,128,238,61,70,34,216,208,3,236,183,126,187,159,152,236,239,214,93,0,245,157,57,196,125,154,195,22,21,161,167,177,95,117,213,203,40,81,192,59,211,221,160,201,4,149,242];
+//const fromWallet = Keypair.fromSecretKey(new Uint8Array(secret));
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var mint, fromTokenAccount, toWallet, toTokenAccount, signature;
+    var fromWallet, mint, fromTokenAccount, toWallet, toTokenAccount, signature;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, spl_token_1.createMint)(connection, fromWallet, // Payer of the transaction
-                fromWallet.publicKey, // Account that will control the minting 
-                null, // Account that will control the freezing of the token 
-                0 // Location of the decimal place 
-                )];
+            case 0: return [4 /*yield*/, (0, helpers_1.getKeypairFromFile)("key.json")];
             case 1:
+                fromWallet = _a.sent();
+                console.log("FROM WALLET", fromWallet.publicKey.toBase58());
+                return [4 /*yield*/, (0, spl_token_1.createMint)(connection, fromWallet, // Payer of the transaction
+                    fromWallet.publicKey, // Account that will control the minting 
+                    null, // Account that will control the freezing of the token 
+                    0 // Location of the decimal place 
+                    )];
+            case 2:
                 mint = _a.sent();
                 return [4 /*yield*/, (0, spl_token_1.getOrCreateAssociatedTokenAccount)(connection, fromWallet, mint, fromWallet.publicKey)];
-            case 2:
+            case 3:
                 fromTokenAccount = _a.sent();
                 toWallet = web3_js_1.Keypair.generate();
                 return [4 /*yield*/, (0, spl_token_1.getOrCreateAssociatedTokenAccount)(connection, fromWallet, mint, toWallet.publicKey)];
-            case 3:
+            case 4:
                 toTokenAccount = _a.sent();
                 return [4 /*yield*/, (0, spl_token_1.mintTo)(connection, fromWallet, // Payer of the transaction fees 
                     mint, // Mint for the account 
@@ -66,7 +71,7 @@ var fromWallet = web3_js_1.Keypair.fromSecretKey(new Uint8Array(secret));
                     fromWallet.publicKey, // Minting authority
                     1 // Amount to mint 
                     )];
-            case 4:
+            case 5:
                 signature = _a.sent();
                 return [4 /*yield*/, (0, spl_token_1.setAuthority)(connection, fromWallet, // Payer of the transaction fees
                     mint, // Account 
@@ -74,7 +79,7 @@ var fromWallet = web3_js_1.Keypair.fromSecretKey(new Uint8Array(secret));
                     0, // Authority type: "0" represents Mint Tokens 
                     null // Setting the new Authority to null
                     )];
-            case 5:
+            case 6:
                 _a.sent();
                 return [4 /*yield*/, (0, spl_token_1.transfer)(connection, fromWallet, // Payer of the transaction fees 
                     fromTokenAccount.address, // Source account 
@@ -82,7 +87,7 @@ var fromWallet = web3_js_1.Keypair.fromSecretKey(new Uint8Array(secret));
                     fromWallet.publicKey, // Owner of the source account 
                     1 // Number of tokens to transfer 
                     )];
-            case 6:
+            case 7:
                 signature = _a.sent();
                 console.log("SIGNATURE", signature);
                 return [2 /*return*/];
